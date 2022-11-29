@@ -267,9 +267,11 @@ export default class ExecuteTimeWidget extends Widget {
           }
           executionTimeNode.children[2].textContent = '';
 
-          msg = `Last executed at ${getTimeString(
+          msg = `Executed at ${getTimeString(
+            startTime
+          )}. Finished at ${getTimeString(
             endTime
-          )} in ${executionTime}`;
+          )}, in ${executionTime}`;
         }
       } else if (startTime) {
         if (this._settings.showLiveExecutionTime) {
@@ -278,8 +280,8 @@ export default class ExecuteTimeWidget extends Widget {
           );
           const workingTimer = setInterval(() => {
             if (
-              !executionTimeNode.children[0].textContent.startsWith(
-                'Execution started at'
+              !executionTimeNode.children[0].textContent.endsWith(
+                'Still running...'
               )
             ) {
               clearInterval(workingTimer);
@@ -297,7 +299,7 @@ export default class ExecuteTimeWidget extends Widget {
             }
           }, 100);
         }
-        msg = `Execution started at ${getTimeString(startTime)}`;
+        msg = `Executed at ${getTimeString(startTime)}`;
       } else if (queuedTime) {
         const lastRunTime = executionTimeNode.getAttribute(
           'data-prev-execution-time'
@@ -306,7 +308,7 @@ export default class ExecuteTimeWidget extends Widget {
           executionTimeNode.children[2].textContent = `N/A (${lastRunTime})`;
         }
 
-        msg = `Execution queued at ${getTimeString(queuedTime)}`;
+        msg = `Execution queued at ${getTimeString(queuedTime)}. Still running...`;
       }
       if (executionTimeNode.textContent !== msg) {
         executionTimeNode.children[0].textContent = msg;
